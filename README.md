@@ -1,4 +1,4 @@
-# SBOL-specification
+# OPIL-specification
 
 This repository contains the master specification document for the Open Protocol Interface Language (OPIL) data model, formatted in LaTeX.  The workflow for updating the specification is to clone, edit, and submit a pull request on the master.
 
@@ -8,35 +8,14 @@ Members of the SD2E community may use the issue tracker to flag problems with th
 
 Before writing text for a non-trivial change, please have it approved by discussion as an Issue.
 
-Proposed changes should be marked with the appropriate version
-macros. The LaTeX command `\threezeroone` has been provided for this
-purpose. See examples in the LaTeX source for proper usage.
-
 Proposed changes should be made in either a branch or a separate fork on GitHub.  To do this, follow standard git branching or forking procedure.
-
-Here is an example of git commands to achieve this:
-
-```shell
-git clone https://github.com/SynBioDex/SBOL-specification.git
-cd SBOL-specification
-
-# Make sure no one has made anymore changes
-git pull origin master
-# Create new branch
-git checkout -b <newBranch>
-
-# Make your edits
-git add <filesYouChanged>
-git commit
-git push origin <newBranch>
-```
 
 When you are ready for your changes to be reviewed for incorporation, create a pull request.
 If you need help on pull requests see: https://help.github.com/articles/about-pull-requests/
 
 ## Automation
 
-This repository uses a [Github Action](https://github.com/features/actions) to automatically build the project when a pull request is made to the `master` branch, or a push is made to the branch (inlcuding when a PR is merged).
+This repository uses a [Github Action](https://github.com/features/actions) to automatically build the project when a pull request is made to the `main` branch, or a push is made to the branch (inlcuding when a PR is merged).
 This creates a PDF and uploads it as as a [workflow artefact](https://help.github.com/en/actions/configuring-and-managing-workflows/persisting-workflow-data-using-artifacts); GitHub retains these for 90 days.
 You can download this PDF by clicking on the green check mark beside a commit, then clicking 'details' in the popover; this will navigate to a different page, where you can click on 'Artefacts' and then 'PDF'.
 
