@@ -93,6 +93,9 @@
 %Command to format external terms in the document
 \newcommand{\external}[1]{\texttt{#1}}
 
+% Rarely used. Use refObj you want to put the field in angle brackets.
+\newcommand{\refObj}[1]{$\langle$#1$\rangle$}
+
 % -----------------------------------------------------------------------------
 % Start of document
 % -----------------------------------------------------------------------------
@@ -126,9 +129,11 @@ Joshua Nowak & \emph{Strateos, USA}\\
 
 \input{purpose}
 
-%\input{overview}
+\input{overview}
 
-%\input{vocabulary}
+\input{vocabulary}
+
+\input{sbolImports}
 
 %\input{dataModel}
 
