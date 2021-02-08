@@ -3,8 +3,8 @@
 % % -----------------------------------------------------------------------------
 
 In OPIL, a protocol is an activity that is configured with certain parameters and applied to a set of biological samples in order to produce a set of measurements by particular instruments at particular times, as illustrated in \ref{f:overview}.
-An \opil{ExecutionRequest} specifies a particular set of \opil{ParameterValue}s, \opil{SampleSet}s, and \opil{Measurement}s to be carried out. 
-A \opil{ProtocolInterface} specifies which \opil{ExecutionRequest}s are allowed for a given protocol with a parallel construction of \opil{Parameter}s, \opil{SampleSet}s, and \opil{MeasurementType}s
+An \opil{ExperimentalRequest} specifies a particular set of \opil{ParameterValue}s, \opil{SampleSet}s, and \opil{Measurement}s to be carried out. 
+A \opil{ProtocolInterface} specifies which \opil{ExperimentalRequest}s are allowed for a given protocol with a parallel construction of \opil{Parameter}s, \opil{SampleSet}s, and \opil{MeasurementType}s
 
 \begin{figure}[ht]
 \begin{center}
@@ -30,7 +30,7 @@ An experimentalist who wishes to use this protocol might want to make a request 
 \begin{quote}
 ``Please run all combinations of strains X and Y in media A, B, and C with 0, 0.1, 0.2, 0.5, and 1.0 uM arabinose. Run for 3 days with flow cytometry at hours 12, 30, 48, and 70. Culture at 27 C.''
 \end{quote}
-These specifies could be encoded into an \opil{ExperimentRequest} by dividing them up as follows:
+These specifies could be encoded into an \opil{ExperimentalRequest} by dividing them up as follows:
 \begin{itemize}
 \item Using \opil{SampleSet} objects: all combinations of strains X and Y in media A, B, and C with 0, 0.1, 0.2, 0.5, and 1.0 uM arabinose.
 \item Using \opil{ParameterValue} objects: run for 3 days, culture at 27 C.

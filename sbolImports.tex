@@ -30,7 +30,7 @@ Whenever a \sbol{TopLevel} object's URI is a URL (e.g., following the convention
 
   \item A \sbol{TopLevel} object's URL MUST NOT be included as prefix for any other \sbol{TopLevel} object.
   
-  	For example, the \path{run102} \opil{ExecutionRequest} object cannot have a URL of \path{https://igem.org/protocols/OD/calibration_2018/run102}, since the \path{https://igem.org/protocols/OD/calibration_2018} prefix is already used as a URL for the \path{calibration_2018} \opil{ProtocolInterface} object.
+  	For example, the \path{run102} \opil{ExperimentalRequest} object cannot have a URL of \path{https://igem.org/protocols/OD/calibration_2018/run102}, since the \path{https://igem.org/protocols/OD/calibration_2018} prefix is already used as a URL for the \path{calibration_2018} \opil{ProtocolInterface} object.
 
   \item The URL of any child or nested object MUST use the following pattern:\texttt{[parent]/[displayId]}, where \texttt{parent} is the URL of its parent object.
 	Multiple layers of child objects are allowed using the same\\ \texttt{[parent]/[displayId]} pattern recursively.
@@ -165,7 +165,7 @@ The \sbol{hasMeasure} property MAY contain any number of \opil{URI}s, each of wh
 
 \sbol{TopLevel} is an abstract class that is extended by any \sbol{Identified} class that can be found at the top level of an OPIL or SBOL document or file.
 In other words, \sbol{TopLevel} objects are never nested inside of any other object as a child object.
-The \sbol{TopLevel} classes defined in OPIL are \opil{ProtocolInterface} and \opil{ExperimentRequest}. 
+The \sbol{TopLevel} classes defined in OPIL are \opil{ProtocolInterface} and \opil{ExperimentalRequest}. 
 
 \begin{figure}[ht]
 \begin{center}
@@ -182,7 +182,7 @@ If the URI for the \sbol{TopLevel} object is a URL, then the URI of the \sbol{ha
 
 \item 
 \label{sec:sbol:hasAttachment}
-The \sbol{hasAttachment} property MAY have any number of \opil{URI}s, each referring to an \sbol{Attachment} object.
+The \sbol{hasAttachment} property MAY have any number of \opil{URI}s, each referring to an \external{sbol:Attachment} object.
 \end{itemize}
 
 
@@ -217,24 +217,24 @@ The \sbolmult{role:C}{role} property MAY have any number of \opil{URI}s, which M
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \item \label{sec:sbol:hasSequence:C}
-The \sbolmult{hasSequence:C}{hasSequence} property MAY have any number of \opil{URI}s, each referencing a \sbol{Sequence} object.  These objects define the primary structure or structures of the \sbol{Component}.
+The \sbolmult{hasSequence:C}{hasSequence} property MAY have any number of \opil{URI}s, each referencing a \external{sbol:Sequence} object.  These objects define the primary structure or structures of the \sbol{Component}.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \item \label{sec:sbol:hasConstraint}
-The \sbol{hasConstraint} property MAY have any number of \opil{URI}s, each referencing a \sbol{Constraint} object.
+The \sbol{hasConstraint} property MAY have any number of \opil{URI}s, each referencing a \external{sbol:Constraint} object.
 These objects describe, among other things, any restrictions on the relative, sequence-based positions and/or orientations of the \sbol{Feature} objects contained by the \sbol{Component}, as well as spatial relations such as containment and identity relations.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \item \label{sec:sbol:hasInteraction}
-The \sbol{hasInteraction} property MAY have any number of \opil{URI}s, each referencing an \sbol{Interaction} object describing a behavioral relationship between \sbol{Feature}s in the \sbol{Component}.
+The \sbol{hasInteraction} property MAY have any number of \opil{URI}s, each referencing an \external{sbol:Interaction} object describing a behavioral relationship between \sbol{Feature}s in the \sbol{Component}.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \item \label{sec:sbol:hasInterface}
-The \sbol{hasInterface} property is OPTIONAL and MAY have a \opil{URI} referencing an \sbol{Interface} object that indicates the inputs, outputs, and non-directional points of connection to a \sbol{Component}.
+The \sbol{hasInterface} property is OPTIONAL and MAY have a \opil{URI} referencing an \external{sbol:Interface} object that indicates the inputs, outputs, and non-directional points of connection to a \sbol{Component}.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \item \label{sec:sbol:hasModel}
-The \sbol{hasModel} property MAY have any number of \opil{URI}s, each referencing a \sbol{Model} object that links the \sbol{Component} to a computational model in any format.
+The \sbol{hasModel} property MAY have any number of \opil{URI}s, each referencing a \external{sbol:Model} object that links the \sbol{Component} to a computational model in any format.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 \end{itemize}
 
@@ -258,7 +258,7 @@ The \sbolmult{role:F}{role} property MAY have any number of \opil{URI}s describi
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \item \label{sec:sbol:orientation:F}
-The \sbolmult{orientation:F}{orientation} property is OPTIONAL and has a data type of \opil{URI}. It is used to indicate the orientation of a double-stranded \sbol{Feature} with respect to a \sbol{Sequence} in its parent \sbol{Component}.
+The \sbolmult{orientation:F}{orientation} property is OPTIONAL and has a data type of \opil{URI}. It is used to indicate the orientation of a double-stranded \sbol{Feature} with respect to a \external{sbol:Sequence} in its parent \sbol{Component}.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 \end{itemize}
 
@@ -275,7 +275,7 @@ In OPIL, this is typically used to specify a variable in a sample design, such a
 The \sbolmult{type:LSC}{type} property is REQUIRED and contains one or more \opil{URI}s. The \sbolmult{type:LSC}{type} property is identical to its use in \sbol{Component}.
 
 \item \label{sec:sbol:hasLocation:LSC}
-The \sbolmult{hasLocation:LSC}{hasLocation} property MAY have any number of \opil{URI}s, each refering to a \sbol{Location} object that indicates the position of this \sbol{Feature} within a \sbol{Sequence} associated with the parent \sbol{Component}.
+The \sbolmult{hasLocation:LSC}{hasLocation} property MAY have any number of \opil{URI}s, each refering to a \external{sbol:Location} object that indicates the position of this \sbol{Feature} within a \external{sbol:Sequence} associated with the parent \sbol{Component}.
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 \end{itemize}
 
@@ -312,7 +312,7 @@ The \sbol{ComponentReference} class is a subclass of \sbol{Feature} that can be 
 \paragraph{SequenceFeature}
 \label{sec:sbol:SequenceFeature}
 
-The \sbol{SequenceFeature} class describes one or more regions of interest on the \sbol{Sequence} objects referred to by its parent \sbol{Component}. 
+The \sbol{SequenceFeature} class describes one or more regions of interest on the \external{sbol:Sequence} objects referred to by its parent \sbol{Component}. 
 \\{\em This is not typically required for specifying experimental sample designs in OPIL.}
 
 \subsubsection{CombinatorialDerivation}
@@ -388,8 +388,8 @@ The \sbol{variantMeasure} property MAY have any number of \opil{URI}s, each refe
 The \sbol{variant} property MAY have any number of \opil{URI}s, each referring to a \sbol{Component} object. This property specifies individual \sbol{Component} objects to serve as options for replacing the \sbol{variable} \sbol{Feature} from the \sbol{template}.
 
 \item \label{sec:sbol:variantCollection}
-The \sbol{variantCollection} property MAY have any number of \opil{URI}s, each referring to a \sbol{Collection} object.
-Such a \sbol{Collection} MUST NOT contain any objects besides \sbol{Component} objects or \sbol{Collection} objects that themselves contain only \sbol{Component} or \sbol{Collection} objects.
+The \sbol{variantCollection} property MAY have any number of \opil{URI}s, each referring to a \external{sbol:Collection} object.
+Such a \external{sbol:Collection} MUST NOT contain any objects besides \sbol{Component} objects or \external{sbol:Collection} objects that themselves contain only \sbol{Component} or \external{sbol:Collection} objects.
 This property enables the specification of groups of \sbol{Component} objects to serve as options.
 
 \item \label{sec:sbol:variantDerivation}
@@ -425,18 +425,18 @@ The Ontology of Units of Measure (OM) (\url{http://www.ontology-of-units-of-meas
 A subset of OM, already adopted by SBOL, is used for this purpose by OPIL as well.
 
 The key class used is \om{Measure}, which associates a number with a unit and a biology-related property.
-In most cases, it should be possible to use one of the \om{Unit} instances already defined by OM; when this is not possible, an appropriate unit can be defined using \om{Unit} and \om{Prefix} classes.
+In most cases, it should be possible to use one of the \external{om:Unit} instances already defined by OM; when this is not possible, an appropriate unit can be defined using \external{om:Unit} and \external{om:Prefix} classes.
 
 \subsubsection{om:Measure} \label{sec:om:Measure}
 
-The purpose of the \om{Measure} class is to link a numerical value to a \om{Unit}. 
+The purpose of the \om{Measure} class is to link a numerical value to a \external{om:Unit}. 
 
 \begin{itemize}
 \item \label{sec:om:hasNumericalValue}
 The \om{hasNumericalValue} property is REQUIRED and MUST contain a single \opil{float}.
 
 \item \label{sec:om:hasUnit:Measure}
-The \ommult{hasUnit:Measure}{hasUnit} property is REQUIRED and MUST contain a \opil{URI} that refers to a \om{Unit}. 
+The \ommult{hasUnit:Measure}{hasUnit} property is REQUIRED and MUST contain a \opil{URI} that refers to a \external{om:Unit}. 
 
 \item \label{sec:sbol:type:Measure}
 The \sbolmult{type:Measure}{type} property MAY contain any number of \opil{URI}s. It is RECOMMENDED that one of these \opil{URI}s identify a term from the Systems Description Parameter branch of the Systems Biology Ontology (SBO) (\url{http://www.ebi.ac.uk/sbo/main/}). This \sbolmult{type:Measure}{type} property was added by SBOL to describe different types of parameters 
@@ -446,7 +446,7 @@ The \sbolmult{type:Measure}{type} property MAY contain any number of \opil{URI}s
 \subsection{Recommended Ontologies for External Terms}
 \label{sec:recomm_ontologies}
 
-External ontologies and controlled vocabularies are an integral part of SBOL and thus used by OPIL as well. SBOL uses \sbol{URI}s to access existing biological information through these resources. 
+External ontologies and controlled vocabularies are an integral part of SBOL and thus used by OPIL as well. SBOL uses \opil{URI}s to access existing biological information through these resources. 
 Although RECOMMENDED ontologies have been indicated in relevant sections where possible, other resources providing similar terms can also be used. A summary of these external sources can be found in \ref{tbl:preferred_external_resources}.
 The URIs for ontological terms SHOULD come from \url{identifiers.org}.  However, it is acceptable to use terms from \url{purl.org} as an alternative, for example when RDF tooling requires URIs to be represented as compliant QNames, and software may convert between these forms as required.
 
