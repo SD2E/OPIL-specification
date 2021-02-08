@@ -21,7 +21,7 @@ In particular, the key words ``MUST'', ``MUST NOT'', ``REQUIRED'', ``SHALL'', ``
 \subsection{UML Diagram Conventions}
 \label{sec:umldiagrams}
 
-The types of biological design data modeled by OPIL are commonly referred to as {\em classes}, especially when discussing the details of software implementation. Each OPIL class can be instantiated by many OPIL objects. These objects MAY contain data that differ in content, but they MUST agree on the type and form of their data as dictated by their common class. Classes are represented in UML diagrams as rectangles labeled at the top with class names (see \ref{fig:uml_sampler} for examples).
+The types of data modeled by OPIL are commonly referred to as {\em classes}, especially when discussing the details of software implementation. Each OPIL class can be instantiated by many OPIL objects. These objects MAY contain data that differ in content, but they MUST agree on the type and form of their data as dictated by their common class. Classes are represented in UML diagrams as rectangles labeled at the top with class names (see \ref{fig:uml_sampler} for examples).
 
 \begin{figure}[ht]
 \begin{center}
@@ -69,7 +69,7 @@ OPIL properties are always given singular names irrespective of their cardinalit
 This is because each relation can potentially stand on its own, irrespective of the existence of others in the set.
 
 Two conventions are used for property names, {\tt name} and {\tt hasName}.  
-When a property is pointing to a class using the same name, it uses the {\tt hasName} convention (e.g., the \opil{ProtocolInterface} class uses \opil{hasParameters} to point to a \opil{Parameter} object).
+When a property is pointing to a class using the same name, it uses the {\tt hasName} convention (e.g., the \opil{ProtocolInterface} class uses \opil{hasParameter} to point to a \opil{Parameter} object).
 When the property uses a different name than the class of the object it points to, it uses the {\tt name} convention instead (e.g., the \opil{MeasurementType} class uses \opil{minInterval} to point to a \opil{Measure} object).
 
 

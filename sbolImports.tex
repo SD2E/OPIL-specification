@@ -5,9 +5,9 @@
 OPIL builds on the Synthetic Biology Open Language (SBOL) version 3~\citep{SBOL3} in several ways:
 \begin{itemize}
 \item OPIL uses the same conventions as SBOL for URIs and types.
-\item OPIL uses the SBOL base classes \sbol{Identified} and \sbol{TopLevel} as parents for OPIL classes.
+\item OPIL uses the SBOL base classes \sbol{Identified} and \sbol{TopLevel} as parents for all OPIL classes.
 \item OPIL uses SBOL classes to describe biological samples in terms of combinations of strains, media, etc.
-\item OPIL makes use of the same external measurement ontology as SBOL, the Ontology of Units of Measure (OM) (\url{http://www.ontology-of-units-of-measure.org/resource/om-2}.
+\item OPIL makes use of the same external measurement ontology as SBOL, the Ontology of Units of Measure (OM) (\url{http://www.ontology-of-units-of-measure.org/resource/om-2}).
 \end{itemize}
 
 In order to make this document more self-contained, this section repeats the material from the SBOL specification on conventions and SBOL base classes.
@@ -26,17 +26,17 @@ Whenever a \sbol{TopLevel} object's URI is a URL (e.g., following the convention
  \item A \sbol{TopLevel} URL MUST use the following pattern:
   \texttt{[namespace]/[local]/[displayId]},  where \texttt{namespace} and \sbol{displayId} are required fragments, and the \texttt{local} fragment is an optional relative path.
   
-  	For example, a \sbol{Component} might have the URL~\path{https://synbiohub.org/public/igem/BBa_J23070}, where \texttt{namespace} is \path{https://synbiohub.org}, \texttt{local} is \path{public/igem}, and \texttt{displayId} is \path{BBa_J23070}.
+  	For example, a \opil{ProtocolInterface} might have the URL~\path{https://igem.org/protocols/OD/calibration_2018}, where \texttt{namespace} is \path{https://igem.org}, \texttt{local} is \path{protocols/OD}, and \sbol{displayId} is \path{calibration_2018}.
 
   \item A \sbol{TopLevel} object's URL MUST NOT be included as prefix for any other \sbol{TopLevel} object.
   
-  	For example, the \path{BBa_J23070_seq} \sbol{Sequence} object cannot have a URL of \path{https://synbiohub.org/public/igem/BBa_J23070/BBa_J23070_seq}, since the \path{https://synbiohub.org/public/igem/BBa_J23070} prefix is already used as a URL for the \path{BBa_J23070} \sbol{Component} object.
+  	For example, the \path{run102} \opil{ExecutionRequest} object cannot have a URL of \path{https://igem.org/protocols/OD/calibration_2018/run102}, since the \path{https://igem.org/protocols/OD/calibration_2018} prefix is already used as a URL for the \path{calibration_2018} \opil{ProtocolInterface} object.
 
   \item The URL of any child or nested object MUST use the following pattern:\texttt{[parent]/[displayId]}, where \texttt{parent} is the URL of its parent object.
 	Multiple layers of child objects are allowed using the same\\ \texttt{[parent]/[displayId]} pattern recursively.
 	
-	For example, a \sbol{SequenceFeature} object owned by the \path{BBa_J23070} \sbol{Component} and having a \sbol{displayId} of \texttt{SequenceFeature1} will have a URL of \path{https://synbiohub.org/public/igem/BBa_J23070/SequenceFeature1}.
-	Similarly, if the \texttt{SequenceFeature1} object has a \sbol{Location} child object with a \sbol{displayId} of \texttt{Location1}, then that object will have the URL\\ \path{https://synbiohub.org/public/igem/BBa_J23070/SequenceFeature1/Location1}.
+	For example, a \opil{MeasurementType} object owned by the \path{calibration_2018} \opil{ProtocolInterface} and having a \sbol{displayId} of \texttt{MeasurementType1} will have a URL of \path{https://igem.org/protocols/OD/calibration_2018/MeasurementType1}.
+	Similarly, if the \texttt{MeasurementType1} object has a \opil{TimeInterval} child object with a \sbol{displayId} of \texttt{TimeInterval1}, then that object will have the URL\\ \path{https://igem.org/protocols/OD/calibration_2018/MeasurementType1/TimeInterval1}.
   \end{itemize}
 
 \subsubsection{Compliant URIs}
@@ -52,28 +52,28 @@ Compliant URIs for \sbol{TopLevel} objects MUST conform to the following pattern
 The \refObj{namespace} token MAY further decompose into \refObj{domain}/\refObj{root} tokens. The \refObj{root} and \refObj{collection\_structure} tokens may optionally be omitted; alternatively, they may consist of an arbitrary number of delimiter-separated layers. Note that this pattern means that SBOL-compliant \opil{URI}s can be automatically decomposed with the aid of a \sbol{TopLevel} object's \sbol{hasNamespace} property. SBOL-compliant objects can be easily remapped into new namespaces by changing only the \refObj{namespace}.
 
 Consider, for example, the SBOL-compliant \opil{URI}:
-\begin{quote}``https://synbiohub.org/igem/2017\_distribution/promoters/constitutive/BBa\_J23101''\end{quote} 
-for a \sbol{Component} with a \sbol{hasNamespace} value ``https://synbiohub.org/igem/2017\_distribution''.
+\begin{quote}``https://igem.org/engineering/protocols/platereader/OD/calibration\_2018''\end{quote} 
+for a \sbol{Component} with a \sbol{hasNamespace} value ``https://igrem.org/engineering/protocols''.
 This \opil{URI} can be decomposed as follows:
 \begin{quote} 
-namespace: ``https://synbiohub.org/igem/2017\_distribution'' \linebreak
-domain: ``https://synbiohub.org'' \linebreak
-root: ``igem/2017\_distribution'' \linebreak
-collection: ``promoters/constitutive'' \linebreak
-displayId: ``BBa\_J23101'' \linebreak
+namespace: ``https://igrem.org/engineering/protocols'' \linebreak
+domain: ``https://igem.org'' \linebreak
+root: ``engineering/protocols'' \linebreak
+collection: ``platereader/OD'' \linebreak
+displayId: ``calibration\_2018'' \linebreak
 \end{quote}
 
 SBOL-compliant URIs also facilitate auto-construction of child objects with unique \opil{URI}s. 
 Child objects of \sbol{TopLevel} objects with compliant \opil{URI}s MUST conform to the following pattern:\\ ``\refObj{parent\_uri}/\refObj{child\_type}\refObj{child\_type\_counter}'' where the \refObj{parent\_uri} refers to the URI of the parent object, the \refObj{child\_type} refers to the SBOL class of the child object, and \refObj{child\_type\_counter} is a unique index for the child object. 
-The \refObj{child\_type\_counter} of a new object SHOULD be calculated at time of object creation as 1 + the maximum \refObj{child\_type\_counter} for each \refObj{child\_type} object in the parent (e.g., ``\refObj{parent\_uri}/SequenceAnnotation37''). 
-Note that numbering is independent for each type, so a \sbol{Component} can have children ``SubComponent37'' and ``Constraint37''.
+The \refObj{child\_type\_counter} of a new object SHOULD be calculated at time of object creation as 1 + the maximum \refObj{child\_type\_counter} for each \refObj{child\_type} object in the parent (e.g., ``\refObj{parent\_uri}/Parameter7''). 
+Note that numbering is independent for each type, so a \opil{ProtocolInterface} can have children ``Parameter7'' and ``MeasurementType7''.
 
 \subsection{OPIL URIs}
  \label{sec:sbolURIs}
   
 \todo[inline]{This needs to be changed from BBN to a more general community name and given a version number}
 The SBOL namespace, which is \url{http://bbn.com/synbio/opil\#}, is used to indicate which entities and properties in an OPIL document are defined by OPIL. 
-For example, the URI of the type \opil{ProtocolInderface} is \url{http://bbn.com/synbio/opil\#ProtocolInterface}. 
+For example, the URI of the type \opil{ProtocolInterface} is \url{http://bbn.com/synbio/opil\#ProtocolInterface}. 
 This convention is assumed throughout the specification.
 The OPIL namespace MUST NOT be used for any entities or properties not defined in this specification.  
 
@@ -82,31 +82,31 @@ Other namespaces are also used by OPIL, however, notably the SBOL 3 namespace \u
 
 \subsection{Primitive Data Types}
 \label{sec:datatypes}
-\label{sec:String}
-\label{sec:Integer}
-\label{sec:Long}
-\label{sec:Double}
-\label{sec:Boolean}
+\label{sec:string}
+\label{sec:integer}
+\label{sec:long}
+\label{sec:float}
+\label{sec:boolean}
 \label{sec:URI}
 \label{sec:literal}
 
-When OPIL uses simple ``primitive'' data types such as \opil{String}s or \opil{Integer}s, these are defined as the following specific formal types:
+When OPIL uses simple ``primitive'' data types such as \opil{string}s or \opil{integer}s, these are defined as the following specific formal types:
 \begin{itemize}
-\item \opil{String}: \url{http://www.w3.org/2001/XMLSchema\#string}\\
+\item \opil{string}: \url{http://www.w3.org/2001/XMLSchema\#string}\\
   {\em Example: ``LacI coding sequence''}
-\item \opil{Integer}: \url{http://www.w3.org/2001/XMLSchema\#integer}\\
+\item \opil{integer}: \url{http://www.w3.org/2001/XMLSchema\#integer}\\
   {\em Example: 3}
-\item \opil{Long}: \url{http://www.w3.org/2001/XMLSchema\#long}\\
+\item \opil{long}: \url{http://www.w3.org/2001/XMLSchema\#long}\\
   {\em Example: 9223372036854775806}
-\item \opil{Double}: \url{http://www.w3.org/2001/XMLSchema\#double}\\
+\item \opil{float}: \url{http://www.w3.org/2001/XMLSchema\#float}\\
   {\em Example: 3.14159}
-\item \opil{Boolean}: \url{http://www.w3.org/2001/XMLSchema\#boolean}\\
+\item \opil{boolean}: \url{http://www.w3.org/2001/XMLSchema\#boolean}\\
   {\em Example: \external{true}}
 \end{itemize}
 
 The term \opil{literal} is used to denote an object that can be any of the five types listed above.
 
-In addition to the simple types listed above, SBOL also uses objects with types \emph{Uniform Resource Identifier} (\opil{URI}). It is important to realize that in RDF, a \opil{URI} might or might not be a resolvable URL (web address).  A \opil{URI} is always a globally unique identifier within a structured namespace.  In some cases, that name is also a reference to (or within) a document, and in some cases that document can also be retrieved (e.g., using a web browser).
+In addition to the simple types listed above, OPIL also uses objects with types \emph{Uniform Resource Identifier} (\opil{URI}). It is important to realize that in RDF, a \opil{URI} might or might not be a resolvable URL (web address).  A \opil{URI} is always a globally unique identifier within a structured namespace.  In some cases, that name is also a reference to (or within) a document, and in some cases that document can also be retrieved (e.g., using a web browser).
 
 \subsection{OPIL Types}
 \label{sec:sbolTypes}
@@ -114,5 +114,54 @@ In addition to the simple types listed above, SBOL also uses objects with types 
 \todo[inline]{Change to match above when root namespace changes: perhaps bioprotocols.org?}
 All OPIL objects are given the most specific \external{rdfType} in the OPIL namespace (\uri{http://bbn.com/synbio/opil\#}) that defines the type of the object.  Namely, an object MUST have no more than one \external{rdfType} property in the \uri{http://bbn.com/synbio/opil\#} namespace.
 
-For example, an object cannot have both the \external{rdfType} of \opil{ProtocolInterface} and \opil{MeasurementType}.  Also, a \opil{MeasureParameter} would have this \external{rdfType} and not also include \external{rdfType}s for classes that it inherits from, such as \sbol{Parameter} and \sbol{Identified}.
+For example, an object cannot have both the \external{rdfType} of \opil{ProtocolInterface} and \opil{MeasurementType}.  Also, a \opil{MeasureParameter} would have this \external{rdfType} and not also include \external{rdfType}s for classes that it inherits from, such as \opil{Parameter} and \sbol{Identified}.
+
+\subsection{Key SBOL Classes}
+
+OPIL classes use \sbol{Identified} and \sbol{TopLevel} as their root classes.
+The OPIL \opil{SampleSet} class extends the \sbol{CombinatorialDerivation} class and makes use of the \sbol{Component} class to describe the composition of experimental samples.
+This subsection summarizes the minimum information required to use these SBOL classes in OPIL; for full details, see the Synthetic Biology Open Language (SBOL) version 3 specification~\citep{SBOL3}
+
+\subsubsection{Identified}
+
+\subsubsection{TopLevel}
+
+\subsubsection{Component}
+
+\subsubsection{Feature}
+
+\subsubsection{CombinatorialDerivation}
+
+\subsubsection{VariableFeature}
+
+
+
+\subsection{Ontology of Units of Measure}
+
+In most cases where a number is needed in OPIL, that number is a measure with units associated with it.
+The Ontology of Units of Measure (OM) (\url{http://www.ontology-of-units-of-measure.org/resource/om-2}) already defines a data model for representing measures and their associated units. 
+A subset of OM, already adopted by SBOL, is used for this purpose by OPIL as well.
+
+The key class used is \om{Measure}, which associates a number with a unit and a biology-related property.
+In most cases, it should be possible to use one of the \om{Unit} instances already defined by OM; when this is not possible, an appropriate unit can be defined using \om{Unit} and \om{Prefix} classes.
+
+\subsubsection{om:Measure} \label{sec:om:Measure}
+
+The purpose of the \om{Measure} class is to link a numerical value to a \om{Unit}. 
+
+\begin{itemize}
+\item \label{sec:om:hasNumericalValue}
+The \om{hasNumericalValue} property is REQUIRED and MUST contain a single \opil{float}.
+
+\item \label{sec:om:hasUnit:Measure}
+The \ommult{hasUnit:Measure}{hasUnit} property is REQUIRED and MUST contain a \opil{URI} that refers to a \om{Unit}. 
+
+\item \label{sec:sbol:type:Measure}
+The \sbolmult{type:Measure}{type} property MAY contain any number of \opil{URI}s. It is RECOMMENDED that one of these \opil{URI}s identify a term from the Systems Description Parameter branch of the Systems Biology Ontology (SBO) (\url{http://www.ebi.ac.uk/sbo/main/}). This \sbolmult{type:Measure}{type} property was added by SBOL to describe different types of parameters 
+(for example, rate of reaction is identified by the SBO term \url{http://identifiers.org/SBO:0000612}).
+
+
+\end{itemize}
+
+
 
