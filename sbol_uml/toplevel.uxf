@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>11</zoom_level>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>495</x>
+      <y>143</y>
+      <w>275</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>/*TopLevel*/
+--
+-hasNamespace[1] : URI
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>583</x>
+      <y>66</y>
+      <w>110</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>/*Identified*/
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>605</x>
+      <y>66</y>
+      <w>54</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>33;33;33;77</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>759</x>
+      <y>165</y>
+      <w>231</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;
+hasAttachment
+0..*</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0;90.0;80.0;60.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>715</x>
+      <y>242</y>
+      <w>110</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>*Attachment*
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>605</x>
+      <y>165</y>
+      <w>131</w>
+      <h>109</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>33;33;33;88;110;88</additional_attributes>
+  </element>
+</diagram>

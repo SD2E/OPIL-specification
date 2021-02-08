@@ -116,25 +116,437 @@ All OPIL objects are given the most specific \external{rdfType} in the OPIL name
 
 For example, an object cannot have both the \external{rdfType} of \opil{ProtocolInterface} and \opil{MeasurementType}.  Also, a \opil{MeasureParameter} would have this \external{rdfType} and not also include \external{rdfType}s for classes that it inherits from, such as \opil{Parameter} and \sbol{Identified}.
 
-\subsection{Key SBOL Classes}
+\subsection{SBOL Classes}
 
 OPIL classes use \sbol{Identified} and \sbol{TopLevel} as their root classes.
 The OPIL \opil{SampleSet} class extends the \sbol{CombinatorialDerivation} class and makes use of the \sbol{Component} class to describe the composition of experimental samples.
 This subsection summarizes the minimum information required to use these SBOL classes in OPIL; for full details, see the Synthetic Biology Open Language (SBOL) version 3 specification~\citep{SBOL3}
 
-\subsubsection{Identified}
+\subsubsection{sbol:Identified}
+\label{sec:sbol:Identified}
 
-\subsubsection{TopLevel}
+All OPIL- and SBOL-defined classes are directly or indirectly derived from the \sbol{Identified}  abstract class.
+This inheritance means that all OPIL and SBOL objects are uniquely identified using \opil{URI}s that uniquely refer to these objects within an SBOL document or at locations on the World Wide Web.
 
-\subsubsection{Component}
+As shown in \ref{uml:identified}, the \sbol{Identified} class includes the following properties: \sbol{displayId},  \sbol{name}, \sbol{description}, \prov{wasDerivedFrom}, and \prov{wasGeneratedBy}. 
 
-\subsubsection{Feature}
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.6]{sbol_uml/identified}
+\caption[]{Diagram of the \sbol{Identified} abstract class and its associated properties}
+\label{uml:identified}
+\end{center}
+\end{figure}
 
-\subsubsection{CombinatorialDerivation}
+\begin{itemize}
+\item \label{sec:sbol:displayId} 
+The \sbol{displayId} property is an OPTIONAL identifier with a data type of \opil{string} (and REQUIRED for objects with URL identifiers). This property is intended to be an intermediate between a URI and the \sbol{name} property that is machine-readable, but more human-readable than the full URI of an object.
+If set, its \opil{string} value MUST be composed of only alphanumeric or underscore characters and MUST NOT begin with a digit.
 
-\subsubsection{VariableFeature}
+\item \label{sec:sbol:name}
+The \sbol{name} property is OPTIONAL and has a data type of \opil{string}. This property is intended to be displayed to a human when visualizing an \sbol{Identified} object.
+If an \sbol{Identified} object lacks a name, then software tools SHOULD instead display the object's \sbol{displayId} or URI.
+
+\item \label{sec:sbol:description}
+The \sbol{description} property is OPTIONAL and has a data type of \opil{string}. This property is intended to contain a more thorough text description of an \sbol{Identified} object.
+
+\item \label{sec:prov:wasDerivedFrom}
+The \prov{wasDerivedFrom} property MAY contain any number of \opil{URI}s. This property is defined by the PROV-O ontology and is located in the \url{https://www.w3.org/ns/prov#} namespace.
+
+\item \label{sec:prov:wasGeneratedBy}
+The \prov{wasGeneratedBy} property MAY contain any number of \opil{URI}s. This property is defined by the PROV-O ontology and is located in the \url{https://www.w3.org/ns/prov#} namespace.
+
+\item \label{sec:sbol:hasMeasure}
+The \sbol{hasMeasure} property MAY contain any number of \opil{URI}s, each of which refers to a \om{Measure} object that describes a measured parameter for this object.
+\end{itemize}
+
+\subsubsection{sbol:TopLevel}
+\label{sec:sbol:TopLevel}
+
+\sbol{TopLevel} is an abstract class that is extended by any \sbol{Identified} class that can be found at the top level of an OPIL or SBOL document or file.
+In other words, \sbol{TopLevel} objects are never nested inside of any other object as a child object.
+The \sbol{TopLevel} classes defined in OPIL are \opil{ProtocolInterface} and \opil{ExperimentRequest}. 
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.6]{sbol_uml/toplevel}
+\caption[]{Classes that inherit from the \sbol{TopLevel} abstract class.}
+\label{uml:toplevel}
+\end{center}
+\end{figure}
+
+\begin{itemize}
+\item \label{sec:sbol:hasNamespace}
+The \sbol{hasNamespace} property is REQUIRED and MUST contain a single \opil{URI} that defines the namespace portion of URLs for this object and any child objects.
+If the URI for the \sbol{TopLevel} object is a URL, then the URI of the \sbol{hasNamespace} property MUST prefix match that URL.
+
+\item 
+\label{sec:sbol:hasAttachment}
+The \sbol{hasAttachment} property MAY have any number of \opil{URI}s, each referring to an \sbol{Attachment} object.
+\end{itemize}
 
 
+\subsubsection{sbol:Component}
+\label{sec:sbol:Component}
+
+The \sbol{Component} class represents the structural and/or functional entities of a biological design. 
+In OPIL, this is primarily used to represent the design of experimental samples as combinations of entities such as strains, genetic constructs, media, inducers, etc.
+
+As shown in \ref{uml:component}, the \sbol{Component} class describes a design entity using a number of different properties.
+In many OPIL usages, however, the only properties required will be \sbolmult{type:C}{type} and \sbol{hasFeature}.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.6]{sbol_uml/component}
+\caption[]{Diagram of the \sbol{Component} class and its associated properties.}
+\label{uml:component}
+\end{center}
+\end{figure} 
+
+\begin{itemize}
+\item \label{sec:sbol:type:C}
+The \sbolmult{type:C}{type} property MUST have one or more \opil{URI}s specifying the category of biochemical or physical entity (for example DNA, protein, or simple chemical) that a \sbol{Component} object represents.
+For OPIL, this SHOULD be from the physical entity representation branch of the Systems Biology Ontology~\citep{SBO}
+and will typically be Functional Entity (\url{https://identifiers.org/SBO:0000241}), which is used to systems of multiple interacting molecules.
+
+\item \label{sec:sbol:hasFeature}
+The \sbol{hasFeature} property MAY have any number of \opil{URI}s, each referencing a \sbol{Feature} object. Each \sbol{Feature} represents a specific occurrence of a part, subsystem, or other notable aspect within that design, such as an ingredient in the composition of a growth medium.
+
+\item \label{sec:sbol:role:C}
+The \sbolmult{role:C}{role} property MAY have any number of \opil{URI}s, which MUST identify terms from ontologies that are consistent with the \sbolmult{type:C}{type} property of the \sbol{Component}.  
+{\em This is not typically required for specifying experimental sample designs in OPIL.}
+
+\item \label{sec:sbol:hasSequence:C}
+The \sbolmult{hasSequence:C}{hasSequence} property MAY have any number of \opil{URI}s, each referencing a \sbol{Sequence} object (see \ref{sec:Sequence}).  These objects define the primary structure or structures of the \sbol{Component}.
+{\em This is not typically required for specifying experimental sample designs in OPIL.}
+
+\item \label{sec:sbol:hasConstraint}
+The \sbol{hasConstraint} property MAY have any number of \opil{URI}s, each referencing a \sbol{Constraint} object.
+These objects describe, among other things, any restrictions on the relative, sequence-based positions and/or orientations of the \sbol{Feature} objects contained by the \sbol{Component}, as well as spatial relations such as containment and identity relations.
+{\em This is not typically required for specifying experimental sample designs in OPIL.}
+
+\item \label{sec:sbol:hasInteraction}
+The \sbol{hasInteraction} property MAY have any number of \opil{URI}s, each referencing an \sbol{Interaction} object describing a behavioral relationship between \sbol{Feature}s in the \sbol{Component}.
+{\em This is not typically required for specifying experimental sample designs in OPIL.}
+
+\item \label{sec:sbol:hasInterface}
+The \sbol{hasInterface} property is OPTIONAL and MAY have a \opil{URI} referencing an \sbol{Interface} object that indicates the inputs, outputs, and non-directional points of connection to a \sbol{Component}.
+{\em This is not typically required for specifying experimental sample designs in OPIL.}
+
+\item \label{sec:sbol:hasModel}
+The \sbol{hasModel} property MAY have any number of \opil{URI}s, each referencing a \sbol{Model} object that links the \sbol{Component} to a computational model in any format.
+{\em This is not typically required for specifying experimental sample designs in OPIL.}
+\end{itemize}
+
+%
+%
+%\subsubsection{Feature}
+%
+%\subsubsection{Feature}
+%\label{sec:Feature}
+%
+%The \sbol{Feature} class, as shown in \ref{uml:subcomponent} is used to compose \sbol{Component} objects into a structural or functional hierarchy. 
+%
+%\begin{figure}[ht]
+%\begin{center}
+%\includegraphics[width=\textwidth]{uml/feature}
+%\caption[]{Diagram of the \sbol{Feature} class, its children, and associated properties.}
+%\label{uml:subcomponent}
+%\end{center}
+%\end{figure}
+%
+%\subparagraph{The \sbolheading{role} property}\label{sec:role:F}
+%
+%Each \sbol{Feature} can have zero or more \sbolmult{role:F}{role} property \sbol{URI}s describing the purpose or potential function of this \sbol{Feature} in the \textit{context} of its parent \sbol{Component}.
+%If the \sbolmult{role:F}{role} for a \sbol{SubComponent} is left unspecified, then the \sbolmult{role:F}{role} is determined by the \sbolmult{role:C}{role} property of the \sbol{Component} that it is an \sbol{instanceOf}. 
+%If provided, these \sbolmult{role:F}{role} property \sbol{URI}s MUST identify terms from appropriate ontologies. Roles are not restricted to describing biological function; they may annotate a \sbol{Feature}'s function in any domain for which an ontology exists.
+%A table of recommended ontology terms for \sbolmult{role:F}{role} is given in \ref{tbl:component_roles}.
+%
+%It is RECOMMENDED that these \sbolmult{role:F}{role} property \sbol{URI}s identify terms that are compatible with the \sbolmult{type:C}{type} properties of the \sbol{Feature}'s parent \sbol{Component}.
+%For example, a \sbolmult{role:F}{role} of a \sbol{Feature} which belongs to a \sbol{Component} of type DNA might refer to terms from the Sequence Ontology. 
+%Likewise, for any feature that is a \sbol{SubComponent}, the \sbolmult{role:F}{role} SHOULD be compatible with the \sbolmult{type:C}{type} of the \sbol{Component} that it links to through its \sbol{instanceOf} property.
+%
+%\subparagraph{The \sbolheading{orientation} property}
+%\label{sec:orientation:F}
+%The \sbolmult{orientation:F}{orientation} property is OPTIONAL and has a data type of \sbol{URI}. This can be used to indicate how any associated double-stranded \sbol{Feature} is oriented on the \sbol{elements} of a \sbol{Sequence} from their parent \sbol{Component}. \ref{tbl:orientation_types} provides a list of REQUIRED \sbolmult{orientation:F}{orientation} \sbol{URI}s. If a \sbol{Feature} object has an \sbolmult{orientation:F}{orientation}, then it MUST come from \ref{tbl:orientation_types}.
+% 
+%
+%\begin{table}[ht]
+%  \begin{edtable}{tabular}{lp{3.75in}}
+%    \toprule
+%    \textbf{Orientation URI} & \textbf{Description} \\
+%    \midrule
+%    \url{http://sbols.org/v3\#inline} & The region specified by this \sbol{Feature} or \sbol{Location} is on the \sbol{elements} of a \sbol{Sequence}. \\
+%    \url{http://sbols.org/v3\#reverseComplement} & The region specified by this \sbol{Feature} or \sbol{Location} is on the reverse-complement mapping of the \sbol{elements} of a \sbol{Sequence}. The exact nature of this mapping depends on the \sbol{encoding} of the \sbol{Sequence}. \\
+%    \bottomrule
+%  \end{edtable}
+%  \caption{REQUIRED \sbol{URI}s for the \sbolmult{orientation:F}{orientation} property}
+%  \label{tbl:orientation_types}
+%\end{table}
+%
+%\paragraph{SubComponent}
+%\label{sec:SubComponent}
+%
+%The \sbol{SubComponent} class is a subclass of the \sbol{Feature} class that can be used to specify structural hierarchy.
+%For example, the \sbol{Component} of a gene might contain four \sbol{SubComponent} objects: a promoter, RBS, CDS, and terminator, each linked to a \sbol{Component} that provides the complete definition.
+%In turn, the \sbol{Component} of the promoter \sbol{SubComponent} might itself contain \sbol{SubComponent} objects defining various operator sites, etc.
+%
+%\subparagraph{The \sbolheading{roleIntegration} property}\label{sec:roleIntegration}
+%
+%A \sbol{roleIntegration} specifies the relationship between a \sbol{SubComponent} instance's own set of \sbolmult{role:F}{role} properties and the set of \sbolmult{role:C}{role} properties on the included \sbol{Component}.
+%
+%The \sbol{roleIntegration} property has a data type of \sbol{URI}. A \sbol{SubComponent} instance with zero \sbolmult{role:F}{role} properties MAY OPTIONALLY specify a \sbol{roleIntegration}. A \sbol{SubComponent} instance with one or more \sbolmult{role:F}{role} properties MUST specify a \sbol{roleIntegration} from \ref{tbl:component_roleIntegration}.
+%If zero \sbol{SubComponent} \sbolmult{role:F}{role} properties are given and no \sbol{SubComponent} \sbol{roleIntegration} is given, then \url{http://sbols.org/v3\#mergeRoles} is assumed.
+%It is RECOMMENDED to specify \sbol{SubComponent} \sbolmult{role:F}{role} values only if the result would differ from the  \sbolmult{role:C}{role} values belonging to this \sbol{SubComponent}'s included \sbol{Component}.
+%
+%\begin{table}[ht]
+%  \begin{edtable}{tabular}{lp{4in}}
+%    \toprule
+%    \textbf{roleIntegration URI} & \textbf{Description} \\
+%    \midrule
+%    \url{http://sbols.org/v3\#overrideRoles} & In the context of this \sbol{SubComponent}, ignore any \sbolmult{role:C}{role} given for the included \sbol{Component}. Instead use only the set of zero or more \sbolmult{role:F}{role} properties given for this \sbol{SubComponent}. \\
+%    \url{http://sbols.org/v3\#mergeRoles} & Use the union of the two sets: both the set of zero or more \sbolmult{role:F}{role} properties given for this \sbol{SubComponent} as well as the set of zero or more \sbolmult{role:C}{role} properties given for the included \sbol{Component}. \\
+%    \bottomrule
+%  \end{edtable}
+%  \caption{Each \sbol{roleIntegration} mode is associated with a rule governing how a \sbol{SubComponent}'s \sbolmult{role:F}{role} values are to be combined with the included \sbol{Component}'s \sbolmult{role:C}{role} values.}
+%  \label{tbl:component_roleIntegration}
+%\end{table}
+%
+%\subparagraph{The \sbolheading{instanceOf} property}
+%\label{sec:instanceOf}
+%
+%The \sbol{instanceOf} property is a REQUIRED \sbol{URI} that refers to the \sbol{Component} providing the definition for this \sbol{SubComponent}.
+%Among other things, as described in the previous section, this \sbol{Component} effectively provides information about the \sbolmult{type:C}{type} and \sbolmult{role:C}{role} of the \sbol{SubComponent}.
+%
+%The \sbol{instanceOf} property MUST NOT refer to the same \sbol{Component} as the one that contains the \sbol{SubComponent}.
+%Furthermore, \sbol{SubComponent} objects MUST NOT form a cyclical chain of references via their \sbol{instanceOf} properties and the \sbol{Component} objects that contain them.
+%For example, consider the \sbol{SubComponent} objects $A$ and $B$ and the \sbol{Component} objects $X$ and $Y$. The reference chain ``$X$ has feature $A$, $A$ is an instance of $Y$, $Y$ has feature $B$, and $B$ is an instance of $X$'' is cyclical.
+%
+%
+%\subparagraph{The \sbolheading{hasLocation} property}\label{sec:hasLocation:SC}
+%
+%A \sbol{SubComponent} MAY have any number of \sbolmult{hasLocation:SC}{hasLocation} properties, each of type \sbol{URI}, that MUST refer to \sbol{Location} objects that indicates the location of the \sbol{Sequence} from the \sbol{instanceOf} \sbol{Component} in a \sbol{Sequence} of the parent \sbol{Component}.
+%
+%If any \sbolmult{hasLocation:SC}{hasLocation} is defined, then there MUST BE precisely one \sbol{Sequence} in the \sbol{instanceOf} \sbol{Component}, as otherwise this relationship is ill-defined.
+%
+%If no \sbolmult{hasLocation:SC}{hasLocation} is defined, this indicates a part / sub-part relationship for which sequence details have not (yet) been determined or involving types for which sequence relationships are not relevant (e.g., inclusion of a reaction chain within a larger metabolic network).
+%
+%Allowing multiple \sbol{Location} objects on a single \sbol{SubComponent} is intended to enable representation of discontinuous regions (for example, a coding sequence encoded across a set of exons with interspersed introns).
+%As such, the \sbol{Location} objects of a single \sbol{SubComponent} MUST NOT specify overlapping regions, since it is not clear what this would mean.
+%There is no such concern with different objects, however, which can freely overlap in \sbol{Location} (for example, specifying overlapping linkers for sequence assembly).
+%
+%
+%\subparagraph{The \sbolheading{sourceLocation} property}\label{sec:sourceLocation}
+%
+%The \sbol{sourceLocation} property allows for only a portion of a \sbol{Component}'s \sbol{Sequence} to be included, rather than its entirety.
+%For example, when composing parts with certain assembly methods, some bases on the boundary may be removed or replaced.
+%Another example is describing a deletion or replacement of a portion of a sequence.
+%
+%A \sbol{SubComponent} MAY have any number of \sbol{sourceLocation} properties, each of type \sbol{URI}, that MUST refer to  \sbol{Location} objects that indicate which \sbol{elements} of the \sbol{instanceOf} \sbol{Component}'s \sbol{Sequence} are used in defining the parent of the \sbol{SubComponent}.
+%
+%If there are no \sbol{sourceLocation} properties, then the whole \sbol{Sequence} is assumed to be included. 
+%
+%
+%\paragraph{ComponentReference}
+%\label{sec:ComponentReference}
+%
+%The \sbol{ComponentReference} class is a subclass of \sbol{Feature} that can be used to reference \sbol{Feature}s within\\ \sbol{SubComponent}s. 
+%
+%\subparagraph{The \sbolheading{inChildOf} property}\label{sec:inChildOf}
+%
+%The \sbol{inChildOf} property is a REQUIRED \sbol{URI} that refers to a \sbol{SubComponent}. 
+%The \sbol{inChildOf} property MUST refer to a \sbol{SubComponent} pointed directly to by the parent of the \sbol{ComponentReference}.
+%Specifically:
+%\begin{itemize}
+%\item If the parent of the \sbol{ComponentReference} is a \sbol{Component}, then \sbol{inChildOf} MUST be one of its \sbol{SubComponent}s.
+%\item If the parent of the \sbol{ComponentReference} is another \sbol{ComponentReference}, then \sbol{inChildOf} MUST be a \sbol{SubComponent} of the \sbol{Component} linked as \sbol{instanceOf} the parent's \sbol{inChildOf} \sbol{SubComponent}.
+%\end{itemize}
+%
+%\subparagraph{The \sbolheading{hasFeature} property}\label{sec:hasFeature:CR}
+%
+%The \sbolmult{hasFeature:CR}{hasFeature} property is a REQUIRED \sbol{URI} that refers to a \sbol{Feature}.
+%
+%This can be used to either link to the \sbol{Feature} being referenced or to chain hierarchically through additional layers of \sbol{SubComponent}.
+%\begin{itemize}
+%\item If the \sbol{Feature} is a \sbol{ComponentReference}, then that \sbol{ComponentReference} acts as a hierarchical link in a chain of references, and MUST be either a child of the \sbol{ComponentReference} linking to it via \sbolmult{hasFeature:CR}{hasFeature} or a child of the \sbol{Component} linked as \sbol{instanceOf} the \sbol{ComponentReference}'s \sbol{inChildOf} \sbol{SubComponent}.
+%\item Otherwise, if the \sbol{hasFeature} refers to any other type of \sbol{Feature}, that \sbol{Feature} MUST be a child of the \sbol{Component} linked as \sbol{instanceOf} the \sbol{ComponentReference}'s \sbol{inChildOf} \sbol{SubComponent}.
+%\end{itemize}
+%
+%For example, \sbol{ComponentReference} R1 looking into a \sbol{SubComponent} for a plasmid might link with \sbol{hasFeature} to its own child \sbol{ComponentReference} R2, which in turn looks within the \sbol{Component} defining the plasmid to the plasmid's CDS \sbol{SubComponent}, in turn using \sbol{hasFeature} to reference a \sbol{SequenceFeature} within the \sbol{Component} that defines that CDS.
+%
+%\paragraph{LocalSubComponent}
+%\label{sec:LocalSubComponent}
+%
+%The \sbol{LocalSubComponent} class is a subclass of \sbol{Feature}. 
+%This class serves as a way to create a placeholder in more complex \sbol{Component}s, such as a variable to be filled in later or a composite that exists only within the context of the parent \sbol{Component}.
+%
+%\subparagraph{The \sbolheading{type} property}\label{sec:type:LSC}
+%
+%The \sbolmult{type:LSC}{type} property is REQUIRED and contains one or more \sbol{URI}s. The \sbolmult{type:LSC}{type} property is identical to its use in \sbol{Component}.
+%
+%\subparagraph{The \sbolheading{hasLocation} property}\label{sec:hasLocation:LSC}
+%
+%A \sbol{LocalSubComponent} MAY have any number of \sbolmult{hasLocation:LSC}{hasLocation} properties, each of type \sbol{URI}, that MUST refer to \sbol{Location} objects. 
+%These follow the same restrictions as for the \sbolmult{hasLocation:SC}{hasLocation} of a \sbol{SubComponent}, notably that the \sbol{Location}s of \sbolmult{hasLocation:LSC}{hasLocation} properties attached to the same \sbol{LocalSubComponent} MUST NOT overlap.
+%
+%\paragraph{ExternallyDefined}
+%\label{sec:ExternallyDefined}
+%
+%The \sbol{ExternallyDefined} class has been introduced so that external definitions in databases like ChEBI or UniProt can be referenced.
+%
+%\subparagraph{The \sbolheading{type} property}\label{sec:type:ED}
+%
+%The \sbolmult{type:ED}{type} property is REQUIRED and contains one or more \sbol{URI}s. The \sbolmult{type:ED}{type} property is identical to its use in \sbol{Component}.
+%
+%\subparagraph{The \sbolheading{definition} property}\label{sec:definition:ED}
+%
+%The \sbolmult{definition:ED}{definition} property is REQUIRED and is of type \sbol{URI} that links to a canonical definition external to SBOL.
+%When possible, such definitions SHOULD use the recommended external resources in \ref{sec:recomm_ontologies}.
+%For example, an \sbol{ExternallyDefined} simple chemical might link to ChEBI and a protein might link to UniProt.
+%
+%\paragraph{SequenceFeature}
+%\label{sec:SequenceFeature}
+%
+%The \sbol{SequenceFeature} class describes one or more regions of interest on the \sbol{Sequence} objects referred to by its parent \sbol{Component}. 
+%
+%\subparagraph{The \sbolheading{hasLocation} property}\label{sec:hasLocation:SF}
+%
+%\threezeroone{The \sbolmult{hasLocation:SF}{hasLocation} is REQUIRED and contains one or more \sbol{URI}s, which} MUST refer to \sbol{Location} objects. 
+%These follow the same restrictions as for the \sbolmult{hasLocation:SC}{hasLocation} of a \sbol{SubComponent}, notably that the \sbol{Location}s of \sbolmult{hasLocation:SF}{hasLocation} properties attached to the same \sbol{SequenceFeature} MUST NOT overlap.
+%
+%
+%\subsubsection{CombinatorialDerivation}
+%
+%\subsection{CombinatorialDerivation}
+%\label{sec:CombinatorialDerivation}
+%
+%The purpose of the \sbol{CombinatorialDerivation} class is to specify combinatorial biological designs without having to specify every possible design variant. For example, a \sbol{CombinatorialDerivation} can be used to specify a library of reporter gene variants that include different promoters and RBSs without having to specify a \sbol{Component} for every possible combination of promoter, RBS, and CDS in the library. \sbol{Component} objects that realize a \sbol{CombinatorialDerivation} can be derived in accordance with the class properties \sbol{template}, \\
+%\threezeroone{\st{hasVariableComponent}} \threezeroone{\sbol{hasVariableFeature}}, and \sbol{strategy} (see \ref{uml:combinatorial_derivation}).
+%
+%\begin{figure}[ht]
+%\begin{center}
+%\includegraphics[scale=0.6]{uml/combinatorial_derivation}
+%\caption[]{Diagram of the \sbol{CombinatorialDerivation} class and its associated properties.}
+%\label{uml:combinatorial_derivation}
+%\end{center}
+%\end{figure}
+%
+%\subparagraph{The \sbolheading{template} property}\label{sec:template}
+%
+%The \sbol{template} property is REQUIRED and MUST contain a URI that refers to a \sbol{Component}. 
+%This \sbol{Component} is expected to serve as a template for the derivation of new \sbol{Component} objects. 
+%Consequently, its \sbol{hasFeature} properties SHOULD contain one or more \threezeroone{\st{SubComponent objects that describe its substructure (referred to hereafter as template SubComponent objects), and its hasConstraint property MAY also contain one or more Constraint objects that constrain this substructure}} \threezeroone{\sbol{Feature} objects that describe its substructure (referred to hereafter as template \sbol{Feature} objects), and its other properties MAY also describe other aspects of the template that will not change based on the values that ay be varied.}
+%
+%When a \sbol{Component} is derived in accordance with a \sbol{CombinatorialDerivation}, the \prov{wasDerivedFrom} property of the derived \sbol{Component} SHOULD refer to the \sbol{CombinatorialDerivation}. When multiple \sbol{Component} objects are derived in accordance with the same \sbol{CombinatorialDerivation}, they MAY be referred to by the \sbol{member} property of a \sbol{Collection}, in which case the \prov{wasDerivedFrom} property of the \sbol{Collection} SHOULD also refer to this \sbol{CombinatorialDerivation}.
+%
+%If the \sbolmult{type:C}{type} property of the template \sbol{Component} contains one or more URIs, then the \sbolmult{type:C}{type} property of any derived \sbol{Component} SHOULD also contain those URIs. 
+%The same holds true for the \sbolmult{role:C}{role} properties of these \sbol{Component} objects.
+%
+%\threezeroone{\st{The hasVariableComponent property}}
+%\threezeroone{\subparagraph{The \sbolheading{hasVariableFeature} property}}\label{sec:hasVariableFeature}
+%
+%Each \threezeroone{\st{VariableComponent}} \threezeroone{\sbol{VariableFeature}} child of a \sbol{CombinatorialDerivation} defines the set of possible values for one of the variables in the \sbol{template}.
+%A \sbol{CombinatorialDerivation} object can have zero or more \threezeroone{\st{hasVariableComponent}} \sbol{hasVariableFeature} properties, each of type \sbol{URI}, specifying a \threezeroone{\st{hasVariableComponent}} \sbol{VariableFeature}. 
+%The set of \threezeroone{\st{hasVariableComponent}} \sbol{hasVariableFeature} properties MUST NOT contain two or more \threezeroone{\st{variableComponent}} \sbol{VariableFeature} objects that refer to the same template \threezeroone{\st{SubComponent}} \sbol{Feature} via their \sbol{variable} properties (i.e., do not define the same variable twice).
+%
+%The \sbol{variable} properties of \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} objects control which \threezeroone{\st{SubComponent}} \sbol{Feature} objects in the \sbol{template} are modified in a derived \sbol{Component}.
+%If no \sbol{variable} property of one of these \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} objects refers to a template \threezeroone{\st{SubComponent}} \sbol{Feature}, then it is not a variable and the derived object SHOULD have a \threezeroone{\st{SubeComponent}} \sbol{Feature} with identical properties
+%and a \prov{wasDerivedFrom} property that refers to the template \threezeroone{\st{SubComponent}} \sbol{Feature}.
+%
+%If a \threezeroone{\st{SubComponent}} \sbol{Feature} in the \sbol{template} is referred to by some \sbol{variable} in a \threezeroone{\st{VariableComponent}} \sbol{VariableFeature}, then it is a variable and it SHOULD be replaced in the derived \sbol{Component} by a number of \threezeroone{\st{SubComponent}} \sbol{Feature} objects constrained by the number specified by the \sbol{cardinality} property of the \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} (see \ref{tbl:cardinality}).
+%Each \threezeroone{\st{instanceOf property of such a SubComponent object in the derived Component MUST refer to a Component object specified by a variant, contained within a variantCollection, or derived from a variantDerivation of the VariableComponent}} \threezeroone{property of such a \sbol{Feature} object in the derived \sbol{Component} MUST be derived from the values of the  associated \sbol{VariableFeature}}.
+%
+%
+%Finally, all derived \threezeroone{\st{SubComponent}} \sbol{Feature} objects MUST follow the \sbol{restriction} properties of any 
+%\sbol{Constraint} objects that refer to their corresponding template \threezeroone{\st{SubComponent}} \sbol{Feature}, and SHOULD have values of \sbolmult{role:F}{role} that contain the same values as the \sbolmult{role:F}{role} in the template \threezeroone{\st{SubComponent}} \sbol{Feature}.
+%
+%
+%\subparagraph{The \sbolheading{strategy} property}\label{sec:strategy}
+%The \sbol{strategy} property is OPTIONAL and has a data type of URI. \ref{tbl:strategy} provides a list of REQUIRED \sbol{strategy} URIs. If the \sbol{strategy} property is not empty, then it MUST contain a URI from \ref{tbl:strategy}. This property recommends how many \sbol{Component} objects SHOULD be derived from the template \sbol{Component}.
+%
+%\begin{table}[ht]
+%  \begin{edtable}{tabular}{lp{4in}}
+%    \toprule
+%    \textbf{Strategy URI} & \textbf{Description} \\
+%    \midrule
+%    \url{http://sbols.org/v3#enumerate}  &  Derivation SHOULD produce all possible \sbol{Component} objects specified by the \sbol{CombinatorialDerivation}. \\
+%        \url{http://sbols.org/v3#sample}  & Derivation SHOULD produce a subset of possible \sbol{Component} objects specified by \sbol{CombinatorialDerivation}. The manner in which this subset is chosen is left unspecified. \\
+%    \bottomrule
+%  \end{edtable}
+%  \caption{REQUIRED \sbol{URI}s for the \sbol{strategy} property.}
+%  \label{tbl:strategy}
+%\end{table}
+%
+%\subsubsection{VariableFeature}
+%\label{sec:VariableFeature}
+%
+%As described \sbolmult{hasVariableFeature}{above}, the \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} class specifies a variable and set of values that will replace one of the \threezeroone{\st{SubComponent}} \sbol{Feature} objects in the \sbol{template} of a \sbol{CombinatorialDerivation}.
+%The variable is specified by the \sbol{variable} property,
+%and the set of values is defined by the union of \sbol{Component} objects referred to by the \sbol{variant}, \sbol{variantCollection}, and \sbol{variantDerivation} properties.
+%
+%Note that this union is intended to be a set and not a multi-set.
+%For example, if the \sbol{variant} property contains a \sbol{Component} $A$ and the \sbol{variantCollection} property has a \sbol{Collection} containing both \sbol{Component} $A$ and  \sbol{Component} $B$, then $A$ SHOULD NOT be selected twice during enumeration, and it SHOULD NOT be selected twice as much as $B$ during sampling.
+%
+%\threezeroone{Given a set of values linked from a \sbol{VariableFeature}, it SHOULD be the case that all value are of type \sbol{om:Measure} or else all values are of type \sbol{Feature}. At present, it is explicitly left undefined how derivation of new components ought to handle mixtures of \sbol{om:Measure} and \sbol{Feature} values.}
+%
+%\begin{figure}[ht]
+%\begin{center}
+%\includegraphics[scale=0.6]{uml/variable_component}
+%\caption[]{Diagram of the \sbol{VariableFeature} class and its associated properties.}
+%\label{uml:variable_component}
+%\end{center}
+%\end{figure}
+%
+%\subparagraph{The \sbolheading{variable} property}\label{sec:variable}
+%
+%The \sbol{variable} property is REQUIRED and MUST contain a URI that refers to a template \threezeroone{\st{SubComponent}} \sbol{Feature} in the \sbol{template} \sbol{Component} referred to by this \threezeroone{\st{VariableComponent's}} \sbol{VariableFeature}'s parent \sbol{CombinatorialDerivation}
+%
+%\threezeroone{\subparagraph{The \sbolheading{variantMeasure} property}\label{sec:variantMeasure}
+%
+%A \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} object can have zero or more \sbol{variantMeasure} properties, each of type \sbol{URI}, specifying a \sbol{om:Measure} object. This property specifies numerical values that are options to be applied to the \sbol{variable} \threezeroone{\st{SubComponent}} \sbol{Feature} from the \sbol{template} when deriving a new \sbol{Component}.
+%
+%Note that because a \sbol{om:Measure} is not a \sbol{TopLevel}, the vlaues of \sbol{variantMeasure} must be child objects of the \sbol{VariableFeature}.}
+%
+%\subparagraph{The \sbolheading{variant} property}\label{sec:variant}
+%
+%A \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} object can have zero or more \sbol{variant} properties, each of type \sbol{URI}, specifying a \sbol{Component} object. This property specifies individual \sbol{Component} objects to serve as options when deriving a new \threezeroone{\st{SubComponent}} \sbol{Feature} for the \sbol{variable} \threezeroone{\st{SubComponent}} \sbol{Feature} from the \sbol{template}.
+%
+%\subparagraph{The \sbolheading{variantCollection} property}\label{sec:variantCollection}
+%
+%A \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} object can have zero or more \sbol{variantCollection} properties, each of type \sbol{URI}, specifying a \sbol{Collection} object.
+%Such a \sbol{Collection} MUST NOT contain any objects besides \sbol{Component} objects or \sbol{Collection} objects that themselves contain only \sbol{Component} or \sbol{Collection} objects.
+%This property enables the specification of existing groups of \sbol{Component} objects to serve as options.
+%
+%\subparagraph{The \sbolheading{variantDerivation} property}\label{sec:variantDerivation}
+%
+%A \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} object can have zero or more \sbol{variantDerivation} properties, each of type \sbol{URI}, specifying a \sbol{CombinatorialDerivation} object. 
+%This property enables the specification of \sbol{Component} objects derived in accordance with another \sbol{CombinatorialDerivation} to serve as options when deriving a new \threezeroone{\st{SubComponent}} \sbol{Feature} for the \sbol{variable} \threezeroone{\st{SubComponent}} \sbol{Feature} from the \sbol{template}. 
+%The \sbol{variantDerivation} properties of a \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} MUST NOT refer to the \sbol{CombinatorialDerivation} that contains this \threezeroone{\st{VariableComponent}} \sbol{VariableFeature}. 
+%Furthermore, such \threezeroone{\st{VariableComponent}} \sbol{VariableFeature} objects MUST NOT form a cyclical chain of references via their \sbol{variantDerivation} properties and the \sbol{CombinatorialDerivation} objects that contain them. 
+%
+%\subparagraph{The \sbolheading{cardinality} property}\label{sec:cardinality}
+%
+%The \sbol{cardinality} property is REQUIRED and has type of URI. This property specifies how many \threezeroone{\st{SubComponent}} \sbol{Feature} objects SHOULD be derived from the template \threezeroone{\st{SubComponent}} \sbol{Feature} during the derivation of a new \sbol{Component}. The URI value of this property MUST come from the URIs provided in~\ref{tbl:cardinality}.
+%
+%\begin{table}[ht]
+%  \begin{edtable}{tabular}{lp{4in}}
+%    \toprule
+%    \textbf{Cardinality URI} & \textbf{Description} \\
+%    \midrule
+%    \url{http://sbols.org/v3#zeroOrOne} & No more than one \sbol{Feature} in the derived \sbol{Component} SHOULD have a \prov{wasDerivedFrom} property that refers to the template \sbol{Feature}. \\
+%        \url{http://sbols.org/v3#one} & Exactly one \sbol{Feature} in the derived \sbol{Component} SHOULD have a \prov{wasDerivedFrom} property that refers to the template \sbol{Feature}. \\
+%\url{http://sbols.org/v3#zeroOrMore} & Any number of \sbol{Feature} objects in the derived \sbol{Component} MAY have \prov{wasDerivedFrom} properties that refer to the template \sbol{Feature}. \\
+%\url{http://sbols.org/v3#oneOrMore} & At least one \sbol{Feature} in the derived \sbol{Component} SHOULD have a \prov{wasDerivedFrom} property that refers to the template \sbol{Feature}. \\
+%    \bottomrule
+%  \end{edtable}
+%  \caption{REQUIRED \sbol{URI}s for the \sbol{cardinality} property.}
+%  \label{tbl:cardinality}
+%\end{table}
+%
+%
+%\subsubsection{VariableFeature}
+%
+%
 
 \subsection{Ontology of Units of Measure}
 
