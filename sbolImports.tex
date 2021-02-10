@@ -71,9 +71,8 @@ Note that numbering is independent for each type, so a \opil{ProtocolInterface} 
 \subsection{OPIL URIs}
  \label{sec:sbolURIs}
   
-\todo[inline]{This needs to be changed from BBN to a more general community name and given a version number}
-The SBOL namespace, which is \url{http://bbn.com/synbio/opil\#}, is used to indicate which entities and properties in an OPIL document are defined by OPIL. 
-For example, the URI of the type \opil{ProtocolInterface} is \url{http://bbn.com/synbio/opil\#ProtocolInterface}. 
+The SBOL namespace, which is \url{http://bioprotocols.org/opil/v1\#}, is used to indicate which entities and properties in an OPIL document are defined by OPIL. 
+For example, the URI of the type \opil{ProtocolInterface} is \url{http://bioprotocols.org/opil/v1\#ProtocolInterface}. 
 This convention is assumed throughout the specification.
 The OPIL namespace MUST NOT be used for any entities or properties not defined in this specification.  
 
@@ -111,8 +110,7 @@ In addition to the simple types listed above, OPIL also uses objects with types 
 \subsection{OPIL Types}
 \label{sec:sbolTypes}
 
-\todo[inline]{Change to match above when root namespace changes: perhaps bioprotocols.org?}
-All OPIL objects are given the most specific \external{rdfType} in the OPIL namespace (\uri{http://bbn.com/synbio/opil\#}) that defines the type of the object.  Namely, an object MUST have no more than one \external{rdfType} property in the \uri{http://bbn.com/synbio/opil\#} namespace.
+All OPIL objects are given the most specific \external{rdfType} in the OPIL namespace (\uri{http://bioprotocols.org/opil/v1\#}) that defines the type of the object.  Namely, an object MUST have no more than one \external{rdfType} property in the \uri{http://bioprotocols.org/opil/v1\#} namespace.
 
 For example, an object cannot have both the \external{rdfType} of \opil{ProtocolInterface} and \opil{MeasurementType}.  Also, a \opil{MeasureParameter} would have this \external{rdfType} and not also include \external{rdfType}s for classes that it inherits from, such as \opil{Parameter} and \sbol{Identified}.
 
