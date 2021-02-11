@@ -5,7 +5,9 @@ The section describes the OPIL data model in detail.
 OPIL classes are in general organized in pairs, one for specifying the interface to a protocol, the other for making requests to execute protocol via that interface.
 As such, this section is also organized in pairs, first each interface class, then the complementary request class.
 
-\todo[inline]{Change PI SampleSet to a new FactorSpace class?}
+\todo[inline]{Issue \#135: Change ProtocolInterface SampleSet to a new FactorSpace class?}
+\todo[inline]{Issue \#134: Diagram [1..1] for REQUIRED parameters should change to [1]}
+\todo[inline]{Issue \#136: Some child objects are being rendered as TopLevel in their links}
 
 \subsection{ProtocolInterface}
 \label{sec:ProtocolInterface}
@@ -20,9 +22,12 @@ The \opil{ProtocolInterface} class represents a protocol that is make available 
 \end{center}
 \end{figure}
 
+\todo[inline]{Issue \#133: protocolMeaurementType in diagram needs to change to hasMeasurementType}
+\todo[inline]{allowedSample will need to change name, either to allowedSampleSet or to a new factor-space name (consequence of Issue \#135)}
+
 \begin{itemize}
-\item \label{sec:hasSampleSet}
-The \opil{hasSampleSet} property MAY contain any number of \opil{URI}s, each of which refers to a \opil{SampleSet} object that describes a range of sample designs allowed for this protocol.
+\item \label{sec:allowedSample}
+The \opil{allowedSample} property MAY contain any number of \opil{URI}s, each of which refers to a \opil{SampleSet} object that describes a range of sample designs allowed for this protocol.
 Any sample design whose properties fall into the range defined for any such \opil{SampleSet} SHOULD be accepted for execution of the protocol.
 For example, a sample set might indicate that a protocol is intended for use with any strain of {\it E. coli} in any growth media with a concentration of one small-molecule inducer at a concentration between 0 and 1 $\mu$M.
 
@@ -47,6 +52,8 @@ The \opil{ExperimentalRequest} class is used to describe requests to actually ru
 \label{uml:ExperimentRequest}
 \end{center}
 \end{figure}
+
+\todo[inline]{Issue \#133: sampleSet in diagram needs to change to hasSampleSet}
 
 \begin{itemize}
 \item \label{sec:ER:instanceOf}
@@ -107,7 +114,7 @@ For example, it might be used to say that plate reader data is required to be ta
 \end{center}
 \end{figure}
 
-\todo[inline]{Should we delete the required field, as redundant with minCount?}
+\todo[inline]{ Issue \#129: Should we delete the required field, as redundant with minCount?}
 
 \begin{itemize}
 \item \label{sec:type}
@@ -161,7 +168,7 @@ If \opil{allowedTime} is not set, then all times are allowed.
 \subsubsection{TimeInterval}
 \label{sec:TimeInterval}
 
-\todo[inline]{Fold in with factor space, if we do that?}
+\todo[inline]{Likely will fold in with factor space, if we do that, per issue \#135}
 
 \opil{TimeInterval} is used for specifying valid ranges of time in which a measurement is allowed to be taken.
 For example, it might be used to say that a measurement can be taken anywhere in the range of 12 to 24 hours, or might be used to say that measurements cannot be taken before hour 3.
@@ -216,8 +223,8 @@ The \opil{time} property MAY contain any number of \opil{URI}s, each referring t
 \subsection{Parameter}
 \label{sec:Parameter}
 
-\todo[inline]{Should type be transformed from class type to a field on Parameter, except for the ones that actually have additional fields? This would simplify type-matching validation rules, but add complexity to knowing when an extension is necessary. The EnumeratedParameter allowedValue field could certainly generalize to any. Likewise, the min and max could be generalized for any orderable type (and maybe folded in with factor spaces, if we do that).}
-\todo[inline]{I think we need an additional field here to indicate whether a parameter is required or not}
+\todo[inline]{Issue \#132: Should type be transformed from class type to a field on Parameter, except for the ones that actually have additional fields? This would simplify type-matching validation rules, but add complexity to knowing when an extension is necessary. The EnumeratedParameter allowedValue field could certainly generalize to any. Likewise, the min and max could be generalized for any orderable type (and maybe folded in with factor spaces, if we do that).}
+\todo[inline]{Issue \#137: I think we need an additional field here to indicate whether a parameter is required or not}
 
 \opil{Parameter} is an abstract class that represents any sort of global setting that may be provided to configure the execution of a protocol.
 The subclasses of \opil{Parameter} are used to indicate different types of value to be set, such as Booleans, integers, and measures (i.e., floating point values with units).
@@ -237,7 +244,12 @@ A \opil{Parameter} SHOULD NOT be used to determine which culture media should be
 \end{center}
 \end{figure}
 
+\todo[inline]{Issue \#138: The required property isn't rendering}
+
 \begin{itemize}
+\item \label{sec:required}
+The \opil{required} property is REQUIRED and MUST contain a single \opil{boolean} that indicates whether this parameter is mandatory. More precisely, it indicates whether an \opil{ExperimentalRequest} for an \opilmult{ER:instanceOf}{instanceOf} the parent \opil{ProtocolInterface} MUST have a \opil{ParameterValue} whose \opil{valueOf} references this \opil{Parameter}
+
 \item \label{sec:defaultValue}
 The \opil{defaultValue} property is OPTIONAL and MAY contain a single \opil{URI} that refers to a \opil{ParameterValue} that provides a default value for the parameter in the case that it is not set.
 \end{itemize}
@@ -312,6 +324,8 @@ For example, a \opil{MeasureValue} might be used to request that a centrifuging 
 \label{uml:ParameterValue}
 \end{center}
 \end{figure}
+
+\todo[inline]{Issue \#137: diagram should not have the unbounded duplicate hasMeasure and valueOf properties}
 
 \begin{itemize}
 \item \label{sec:valueOf}
