@@ -107,7 +107,7 @@ For example, it might be used to say that plate reader data is required to be ta
 \end{center}
 \end{figure}
 
-\todo[inline]{Delete the required field?}
+\todo[inline]{Should we delete the required field, as redundant with minCount?}
 
 \begin{itemize}
 \item \label{sec:type}
@@ -216,11 +216,17 @@ The \opil{time} property MAY contain any number of \opil{URI}s, each referring t
 \subsection{Parameter}
 \label{sec:Parameter}
 
+\todo[inline]{Should type be transformed from class type to a field on Parameter, except for the ones that actually have additional fields? This would simplify type-matching validation rules, but add complexity to knowing when an extension is necessary. The EnumeratedParameter allowedValue field could certainly generalize to any. Likewise, the min and max could be generalized for any orderable type (and maybe folded in with factor spaces, if we do that).}
+\todo[inline]{I think we need an additional field here to indicate whether a parameter is required or not}
+
 \opil{Parameter} is an abstract class that represents any sort of global setting that may be provided to configure the execution of a protocol.
+The subclasses of \opil{Parameter} are used to indicate different types of value to be set, such as Booleans, integers, and measures (i.e., floating point values with units).
+
 This is a catch-all class intended for capturing any information that cannot be systematized in terms of \opil{SampleSet} and \opil{Measurement} information, and thus SHOULD NOT be used to represent anything that can be well-represented using those classes.
 
-For example, it would be good to use a \opil{Parameter} to indicate whether an optional post-culturing dilution step should be used.
-It would be problematic to use a \opil{Parameter} to indicate which culture media should be used (which can be represented well via \opil{SampleSet}) or to indicate whether samples should be evaluated with an optional proteomics step (which can be represented well via \opil{Measurement}).
+For example, a \opil{Parameter} can be used to determine whether an optional post-culturing dilution step should be executed.
+A \opil{Parameter} SHOULD NOT be used to determine which culture media should be used in a sample (since that can be represented well via \opil{SampleSet}) or to indicate whether samples should be evaluated with an optional proteomics step (since that can be represented well via \opil{Measurement}).
+
 
 
 \begin{figure}[ht]
@@ -231,26 +237,65 @@ It would be problematic to use a \opil{Parameter} to indicate which culture medi
 \end{center}
 \end{figure}
 
+\begin{itemize}
+\item \label{sec:defaultValue}
+The \opil{defaultValue} property is OPTIONAL and MAY contain a single \opil{URI} that refers to a \opil{ParameterValue} that provides a default value for the parameter in the case that it is not set.
+\end{itemize}
+
+
 \subsubsection{BooleanParameter}
 \label{sec:BooleanParameter}
 
+{\em \opil{BooleanParameter} has no additional properties.}
 
 \subsubsection{EnumeratedParameter}
 \label{sec:EnumeratedParameter}
 
+\begin{itemize}
+\item \label{sec:allowedValue}
+The \opil{allowedValue} property MAY contain any number of \opil{string} values, indicating the legal values for this \opil{EnumeratedParameter}. 
+For example, 
+\end{itemize}
+
 \subsubsection{IntegerParameter}
 \label{sec:IntegerParameter}
+
+\begin{itemize}
+\item \label{sec:minValue}
+The \opil{minValue} property is OPTIONAL and MAY contain an \opil{integer}.
+If \opil{minValue} is not set, it is treated as negative infinity.
+\opil{minValue} must be less than or equal to \opil{maxValue}.
+
+\item \label{sec:maxValue}
+The \opil{maxValue} property is OPTIONAL and MAY contain an \opil{integer}.
+If \opil{maxValue} is not set, it is treated as infinity.
+\opil{maxValue} must be greater than or equal to \opil{minValue}.
+\end{itemize}
 
 \subsubsection{MeasureParameter}
 \label{sec:MeasureParameter}
 
+\begin{itemize}
+\item \label{sec:minMeasure}
+The \opil{minMeasure} property is OPTIONAL and MAY contain a \opil{URI} referring to a \om{Measure}.
+If \opil{minMeasure} is not set, it is treated as negative infinity.
+\opil{minMeasure} must be less than or equal to \opil{maxMeasure}.
+
+\item \label{sec:maxMeasure}
+The \opil{maxMeasure} property is OPTIONAL and MAY contain a \opil{URI} referring to a \om{Measure}.
+If \opil{maxMeasure} is not set, it is treated as infinity.
+\opil{maxMeasure} must be greater than or equal to \opil{minMeasure}.
+\end{itemize}
+
 \subsubsection{StringParameter}
 \label{sec:StringParameter}
 
+{\em \opil{BooleanParameter} has no additional properties.}
 
 \subsubsection{URIParameter}
 \label{sec:URIParameter}
 
+{\em \opil{BooleanParameter} has no additional properties.}
 
 
 \subsection{ParameterValue}
@@ -271,6 +316,7 @@ For example, a \opil{MeasureValue} might be used to request that a centrifuging 
 \begin{itemize}
 \item \label{sec:valueOf}
 The \opil{valueOf} property is REQUIRED and MUST contain a single \opil{URI} that refers to the \opil{Parameter} describing the parameter being set.
+The \opil{Parameter} MUST be of a corresponding class, e.g., a \opil{BooleanValue} must match a \opil{BooleanParameter}.
 \end{itemize}
 
 
