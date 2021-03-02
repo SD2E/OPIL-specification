@@ -3,3 +3,15 @@
 opil.cb
 opil.cb2
 opil.pdf
+
+*.aux
+
+*.bbl
+
+*.blg
+
+*.log
+
+*.out
+
+*.toc
